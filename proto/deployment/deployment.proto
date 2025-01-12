@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package deployment;
+
+option go_package = "gen/go/deployment";
+
+service FileTransferService {
+    rpc TransferFile(stream FileChunk) returns (TransferStatus);
+}
+
+message FileChunk {
+    bytes content = 1;
+    string fileName = 2;
+    int32 chunkNumber = 3;
+}
+
+message TransferStatus {
+    bool success = 1;
+    string message = 2;
+}

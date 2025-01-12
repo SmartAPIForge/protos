@@ -8,3 +8,8 @@ tasks:
     desc: "Generate code for auth from proto file"
     cmds:
       - protoc -I proto proto/auth/auth.proto --go_out=./gen/go/ --go_opt=paths=source_relative --go-grpc_out=./gen/go/ --go-grpc_opt=paths=source_relative
+  
+  generate-deployment:
+    desc: "Generate code for deployment from proto file"
+    cmds:
+      - protoc -I proto proto/deployment/deployment.proto --go_out=./gen/go/ --go_opt=paths=source_relative --go-grpc_out=./gen/go/ --go-grpc_opt=paths=source_relative
