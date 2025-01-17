@@ -1,5 +1,6 @@
 # protos
 
-> INSTALL protoc
-
-> INSTALL go-task
+```
+go get
+task <name>
+```
