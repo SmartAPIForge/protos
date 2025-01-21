@@ -21,6 +21,8 @@ service Auth {
   };
 }
 
+// auth.register
+
 message RegisterRequest {
   string email = 1;
   string password = 2;
@@ -30,11 +32,56 @@ message RegisterResponse {
   int64 user_id = 1;
 }
 
+// auth.login
+
 message LoginRequest {
   string email = 1;
   string password = 2;
 }
 
 message LoginResponse {
-  string token = 1;
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+// auth.validate.customer
+
+message ValidateCustomerRequest {
+  string access_token = 1;
+}
+
+message ValidateCustomerResponse {
+  bool valid = 1;
+}
+
+// auth.validate.admin
+
+message ValidateAdminRequest {
+  string access_token = 1;
+}
+
+message ValidateAdminResponse {
+  bool valid = 1;
+}
+
+// auth.refresh
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message RefreshResponse{
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+// user.get
+
+message GetUserByIdRequest {
+  string user_id = 1;
+}
+
+message GetUserByIdResponse {
+  string user_id = 1;
+  string email = 2;
 }
