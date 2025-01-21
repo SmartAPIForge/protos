@@ -96,7 +96,10 @@
     "authLoginResponse": {
       "type": "object",
       "properties": {
-        "token": {
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
           "type": "string"
         }
       }
