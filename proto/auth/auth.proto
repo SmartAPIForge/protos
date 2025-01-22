@@ -21,6 +21,17 @@ service Auth {
   };
 }
 
+enum UserRole {
+  Owner = 0;
+  Admin = 1;
+  Customer = 2;
+}
+
+enum ValidationUserError {
+  Unauthorized = 0;
+  Forbidden = 1;
+}
+
 // auth.register
 
 message RegisterRequest {
@@ -46,14 +57,14 @@ message LoginResponse {
 
 // auth.validate.customer
 
-message ValidateRouteRequest {
+message ValidateUserRequest {
   string access_token = 1;
-  int64 resource = 2;
-  optional int64 route_id = 3;
+  UserRole required_role = 2;
 }
 
-message ValidateRouteResponse {
+message ValidateUserResponse {
   bool valid = 1;
+  optional ValidationUserError error_code = 2;
 }
 
 // auth.refresh
