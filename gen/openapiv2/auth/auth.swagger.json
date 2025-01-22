@@ -48,6 +48,38 @@
         ]
       }
     },
+    "/refresh": {
+      "post": {
+        "operationId": "Auth_Refresh",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authRefreshResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authRefreshRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/register": {
       "post": {
         "operationId": "Auth_Register",
@@ -72,6 +104,38 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/authRegisterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/validate-user": {
+      "post": {
+        "operationId": "Auth_ValidateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authValidateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authValidateUserRequest"
             }
           }
         ],
@@ -104,6 +168,25 @@
         }
       }
     },
+    "authRefreshRequest": {
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "authRefreshResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
     "authRegisterRequest": {
       "type": "object",
       "properties": {
@@ -121,6 +204,26 @@
         "userId": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "authValidateUserRequest": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "requiredRole": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "authValidateUserResponse": {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean"
         }
       }
     },
