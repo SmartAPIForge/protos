@@ -19,6 +19,18 @@ service Auth {
       body: "*"
     };
   };
+  rpc ValidateUser (ValidateUserRequest) returns (ValidateUserResponse) {
+    option (google.api.http) = {
+      post: "/validate-user"
+      body: "*"
+    };
+  };
+  rpc Refresh (RefreshRequest) returns (RefreshResponse) {
+    option (google.api.http) = {
+      post: "/refresh"
+      body: "*"
+    };
+  };
 }
 
 // auth.register
@@ -64,15 +76,4 @@ message RefreshRequest {
 message RefreshResponse{
   string access_token = 1;
   string refresh_token = 2;
-}
-
-// user.get
-
-message GetUserByIdRequest {
-  string user_id = 1;
-}
-
-message GetUserByIdResponse {
-  string user_id = 1;
-  string email = 2;
 }
