@@ -46,21 +46,13 @@ message LoginResponse {
 
 // auth.validate.customer
 
-message ValidateCustomerRequest {
+message ValidateRouteRequest {
   string access_token = 1;
+  int64 resource = 2;
+  optional int64 route_id = 3;
 }
 
-message ValidateCustomerResponse {
-  bool valid = 1;
-}
-
-// auth.validate.admin
-
-message ValidateAdminRequest {
-  string access_token = 1;
-}
-
-message ValidateAdminResponse {
+message ValidateRouteResponse {
   bool valid = 1;
 }
 
