@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package codegen;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "gen/go/codegen";
+
+service CodegenService {
+  rpc Generate(SafRequest) returns (TrackDTO);
+  rpc Track(TrackDTO) returns (GenerationStatusResponse);
+}
+
+message SafRequest {
+  google.protobuf.Struct data = 1;
+}
+
+message TrackDTO {
+  string id = 1;
+}
+
+message GenerationStatusResponse {
+  oneof status {
+    string PENDING = 1;
+    string SUCCESS = 2;
+    string FAIL = 3;
+  }
+}
