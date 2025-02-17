@@ -26,3 +26,20 @@ tasks:
     desc: "Generate code for deployment from proto file"
     cmds:
       - protoc -I proto proto/deployment/deployment.proto --go_out=./gen/go/ --go_opt=paths=source_relative --go-grpc_out=./gen/go/ --go-grpc_opt=paths=source_relative
+
+  generate-codegen-go:
+    desc: "Generate golang code for codegen from proto file"
+    cmds:
+      - protoc -I proto proto/codegen/codegen.proto
+        --go_out=./gen/go/
+        --go_opt=paths=source_relative
+        --go-grpc_out=./gen/go/
+        --go-grpc_opt=paths=source_relative
+
+  generate-codegen-nest:
+    desc: "Generate typescript code for codegen from proto file"
+    cmds:
+      - protoc -I proto proto/codegen/codegen.proto
+        --plugin=./node_modules/.bin/protoc-gen-ts_proto
+        --ts_proto_out=./gen/ts/
+        --ts_proto_opt=nestJs=true
