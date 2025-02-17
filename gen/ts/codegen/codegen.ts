@@ -6,14 +6,20 @@
 
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
-import { Struct } from "../google/protobuf/struct";
 
 export const protobufPackage = "codegen";
 
+export enum GenerationStatus {
+  UNKNOWN = 0,
+  PENDING = 1,
+  SUCCESS = 2,
+  FAIL = 3,
+  UNRECOGNIZED = -1,
+}
+
 export interface SafRequest {
-  data: { [key: string]: any } | undefined;
+  data: string;
 }
 
 export interface TrackDTO {
@@ -21,14 +27,10 @@ export interface TrackDTO {
 }
 
 export interface GenerationStatusResponse {
-  PENDING?: string | undefined;
-  SUCCESS?: string | undefined;
-  FAIL?: string | undefined;
+  status: GenerationStatus;
 }
 
 export const CODEGEN_PACKAGE_NAME = "codegen";
-
-wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface CodegenServiceClient {
   generate(request: SafRequest): Observable<TrackDTO>;

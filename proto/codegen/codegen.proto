@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package codegen;
 
-import "google/protobuf/struct.proto";
-
 option go_package = "gen/go/codegen";
 
 service CodegenService {
@@ -12,7 +10,7 @@ service CodegenService {
 }
 
 message SafRequest {
-  google.protobuf.Struct data = 1;
+  string data = 1;
 }
 
 message TrackDTO {
@@ -20,9 +18,12 @@ message TrackDTO {
 }
 
 message GenerationStatusResponse {
-  oneof status {
-    string PENDING = 1;
-    string SUCCESS = 2;
-    string FAIL = 3;
-  }
+  GenerationStatus status = 1;
+}
+
+enum GenerationStatus {
+  UNKNOWN = 0;
+  PENDING = 1;
+  SUCCESS = 2;
+  FAIL = 3;
 }
