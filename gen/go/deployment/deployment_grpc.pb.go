@@ -19,96 +19,179 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FileTransferService_TransferFile_FullMethodName = "/deployment.FileTransferService/TransferFile"
+	DeploymentService_ListServers_FullMethodName  = "/deployment.DeploymentService/ListServers"
+	DeploymentService_AddServer_FullMethodName    = "/deployment.DeploymentService/AddServer"
+	DeploymentService_RemoveServer_FullMethodName = "/deployment.DeploymentService/RemoveServer"
 )
 
-// FileTransferServiceClient is the client API for FileTransferService service.
+// DeploymentServiceClient is the client API for DeploymentService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type FileTransferServiceClient interface {
-	TransferFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunk, TransferStatus], error)
+type DeploymentServiceClient interface {
+	ListServers(ctx context.Context, in *ListServersRequest, opts ...grpc.CallOption) (*ListServersResponse, error)
+	AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*AddServerResponse, error)
+	RemoveServer(ctx context.Context, in *Server, opts ...grpc.CallOption) (*Server, error)
 }
 
-type fileTransferServiceClient struct {
+type deploymentServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewFileTransferServiceClient(cc grpc.ClientConnInterface) FileTransferServiceClient {
-	return &fileTransferServiceClient{cc}
+func NewDeploymentServiceClient(cc grpc.ClientConnInterface) DeploymentServiceClient {
+	return &deploymentServiceClient{cc}
 }
 
-func (c *fileTransferServiceClient) TransferFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunk, TransferStatus], error) {
+func (c *deploymentServiceClient) ListServers(ctx context.Context, in *ListServersRequest, opts ...grpc.CallOption) (*ListServersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &FileTransferService_ServiceDesc.Streams[0], FileTransferService_TransferFile_FullMethodName, cOpts...)
+	out := new(ListServersResponse)
+	err := c.cc.Invoke(ctx, DeploymentService_ListServers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[FileChunk, TransferStatus]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type FileTransferService_TransferFileClient = grpc.ClientStreamingClient[FileChunk, TransferStatus]
+func (c *deploymentServiceClient) AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*AddServerResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddServerResponse)
+	err := c.cc.Invoke(ctx, DeploymentService_AddServer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
 
-// FileTransferServiceServer is the server API for FileTransferService service.
-// All implementations must embed UnimplementedFileTransferServiceServer
+func (c *deploymentServiceClient) RemoveServer(ctx context.Context, in *Server, opts ...grpc.CallOption) (*Server, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Server)
+	err := c.cc.Invoke(ctx, DeploymentService_RemoveServer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DeploymentServiceServer is the server API for DeploymentService service.
+// All implementations must embed UnimplementedDeploymentServiceServer
 // for forward compatibility.
-type FileTransferServiceServer interface {
-	TransferFile(grpc.ClientStreamingServer[FileChunk, TransferStatus]) error
-	mustEmbedUnimplementedFileTransferServiceServer()
+type DeploymentServiceServer interface {
+	ListServers(context.Context, *ListServersRequest) (*ListServersResponse, error)
+	AddServer(context.Context, *AddServerRequest) (*AddServerResponse, error)
+	RemoveServer(context.Context, *Server) (*Server, error)
+	mustEmbedUnimplementedDeploymentServiceServer()
 }
 
-// UnimplementedFileTransferServiceServer must be embedded to have
+// UnimplementedDeploymentServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedFileTransferServiceServer struct{}
+type UnimplementedDeploymentServiceServer struct{}
 
-func (UnimplementedFileTransferServiceServer) TransferFile(grpc.ClientStreamingServer[FileChunk, TransferStatus]) error {
-	return status.Errorf(codes.Unimplemented, "method TransferFile not implemented")
+func (UnimplementedDeploymentServiceServer) ListServers(context.Context, *ListServersRequest) (*ListServersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListServers not implemented")
 }
-func (UnimplementedFileTransferServiceServer) mustEmbedUnimplementedFileTransferServiceServer() {}
-func (UnimplementedFileTransferServiceServer) testEmbeddedByValue()                             {}
+func (UnimplementedDeploymentServiceServer) AddServer(context.Context, *AddServerRequest) (*AddServerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddServer not implemented")
+}
+func (UnimplementedDeploymentServiceServer) RemoveServer(context.Context, *Server) (*Server, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveServer not implemented")
+}
+func (UnimplementedDeploymentServiceServer) mustEmbedUnimplementedDeploymentServiceServer() {}
+func (UnimplementedDeploymentServiceServer) testEmbeddedByValue()                           {}
 
-// UnsafeFileTransferServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to FileTransferServiceServer will
+// UnsafeDeploymentServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DeploymentServiceServer will
 // result in compilation errors.
-type UnsafeFileTransferServiceServer interface {
-	mustEmbedUnimplementedFileTransferServiceServer()
+type UnsafeDeploymentServiceServer interface {
+	mustEmbedUnimplementedDeploymentServiceServer()
 }
 
-func RegisterFileTransferServiceServer(s grpc.ServiceRegistrar, srv FileTransferServiceServer) {
-	// If the following call pancis, it indicates UnimplementedFileTransferServiceServer was
+func RegisterDeploymentServiceServer(s grpc.ServiceRegistrar, srv DeploymentServiceServer) {
+	// If the following call pancis, it indicates UnimplementedDeploymentServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&FileTransferService_ServiceDesc, srv)
+	s.RegisterService(&DeploymentService_ServiceDesc, srv)
 }
 
-func _FileTransferService_TransferFile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(FileTransferServiceServer).TransferFile(&grpc.GenericServerStream[FileChunk, TransferStatus]{ServerStream: stream})
+func _DeploymentService_ListServers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListServersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeploymentServiceServer).ListServers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DeploymentService_ListServers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeploymentServiceServer).ListServers(ctx, req.(*ListServersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type FileTransferService_TransferFileServer = grpc.ClientStreamingServer[FileChunk, TransferStatus]
+func _DeploymentService_AddServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddServerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeploymentServiceServer).AddServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DeploymentService_AddServer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeploymentServiceServer).AddServer(ctx, req.(*AddServerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
 
-// FileTransferService_ServiceDesc is the grpc.ServiceDesc for FileTransferService service.
+func _DeploymentService_RemoveServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Server)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeploymentServiceServer).RemoveServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DeploymentService_RemoveServer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeploymentServiceServer).RemoveServer(ctx, req.(*Server))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// DeploymentService_ServiceDesc is the grpc.ServiceDesc for DeploymentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var FileTransferService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "deployment.FileTransferService",
-	HandlerType: (*FileTransferServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
+var DeploymentService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "deployment.DeploymentService",
+	HandlerType: (*DeploymentServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			StreamName:    "TransferFile",
-			Handler:       _FileTransferService_TransferFile_Handler,
-			ClientStreams: true,
+			MethodName: "ListServers",
+			Handler:    _DeploymentService_ListServers_Handler,
+		},
+		{
+			MethodName: "AddServer",
+			Handler:    _DeploymentService_AddServer_Handler,
+		},
+		{
+			MethodName: "RemoveServer",
+			Handler:    _DeploymentService_RemoveServer_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "deployment/deployment.proto",
 }
