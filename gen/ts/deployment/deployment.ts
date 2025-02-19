@@ -18,18 +18,26 @@ export interface RemoveServerResponse {
   status: boolean;
 }
 
-export interface Server {
+export interface ServerPreview {
   id: number;
   ip: string;
   port: number;
   user: string;
 }
 
+export interface Server {
+  id: number;
+  ip: string;
+  port: number;
+  user: string;
+  password: string;
+}
+
 export interface ListServersRequest {
 }
 
 export interface ListServersResponse {
-  servers: Server[];
+  servers: ServerPreview[];
 }
 
 export interface AddServerRequest {
@@ -40,7 +48,7 @@ export interface AddServerRequest {
 }
 
 export interface AddServerResponse {
-  server: Server | undefined;
+  server: ServerPreview | undefined;
 }
 
 export interface DeployContainerRequest {
@@ -59,7 +67,7 @@ export interface DeploymentServiceClient {
 
   addServer(request: AddServerRequest): Observable<AddServerResponse>;
 
-  removeServer(request: Server): Observable<Server>;
+  removeServer(request: RemoveServerRequest): Observable<RemoveServerResponse>;
 }
 
 export interface DeploymentServiceController {
@@ -69,7 +77,9 @@ export interface DeploymentServiceController {
 
   addServer(request: AddServerRequest): Promise<AddServerResponse> | Observable<AddServerResponse> | AddServerResponse;
 
-  removeServer(request: Server): Promise<Server> | Observable<Server> | Server;
+  removeServer(
+    request: RemoveServerRequest,
+  ): Promise<RemoveServerResponse> | Observable<RemoveServerResponse> | RemoveServerResponse;
 }
 
 export function DeploymentServiceControllerMethods() {
