@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package codegen;
+
+option go_package = "gen/go/codegen";
+
+service CodegenService {
+  rpc Generate(SafRequest) returns (TrackDTO);
+  rpc Track(TrackDTO) returns (GenerationStatusResponse);
+}
+
+message SafRequest {
+  string data = 1;
+}
+
+message TrackDTO {
+  string id = 1;
+}
+
+message GenerationStatusResponse {
+  GenerationStatus status = 1;
+}
+
+enum GenerationStatus {
+  UNKNOWN = 0;
+  PENDING = 1;
+  SUCCESS = 2;
+  FAIL = 3;
+}
