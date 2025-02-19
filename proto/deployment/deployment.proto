@@ -18,7 +18,7 @@ service DeploymentService {
             body: "*"
         };
     };
-    rpc RemoveServer (Server) returns (Server) {
+    rpc RemoveServer (RemoveServerRequest) returns (RemoveServerResponse) {
         option (google.api.http) = {
             delete: "/servers/{id}"
         };
@@ -33,17 +33,25 @@ message RemoveServerResponse {
     bool status = 1;
 }
 
-message Server {
+message ServerPreview {
     uint32 id = 1;
     string ip = 2;
     uint32 port = 3;
     string user = 4;
 }
 
+message Server {
+    uint32 id = 1;
+    string ip = 2;
+    uint32 port = 3;
+    string user = 4;
+    string password = 5;
+}
+
 message ListServersRequest {}
 
 message ListServersResponse {
-    repeated Server servers = 1;
+    repeated ServerPreview servers = 1;
 }
 
 message AddServerRequest {
@@ -54,7 +62,7 @@ message AddServerRequest {
 }
 
 message AddServerResponse {
-    Server server = 1;
+    ServerPreview server = 1;
 }
 
 message DeployContainerRequest {

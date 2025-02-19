@@ -30,7 +30,7 @@ const (
 type DeploymentServiceClient interface {
 	ListServers(ctx context.Context, in *ListServersRequest, opts ...grpc.CallOption) (*ListServersResponse, error)
 	AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*AddServerResponse, error)
-	RemoveServer(ctx context.Context, in *Server, opts ...grpc.CallOption) (*Server, error)
+	RemoveServer(ctx context.Context, in *RemoveServerRequest, opts ...grpc.CallOption) (*RemoveServerResponse, error)
 }
 
 type deploymentServiceClient struct {
@@ -61,9 +61,9 @@ func (c *deploymentServiceClient) AddServer(ctx context.Context, in *AddServerRe
 	return out, nil
 }
 
-func (c *deploymentServiceClient) RemoveServer(ctx context.Context, in *Server, opts ...grpc.CallOption) (*Server, error) {
+func (c *deploymentServiceClient) RemoveServer(ctx context.Context, in *RemoveServerRequest, opts ...grpc.CallOption) (*RemoveServerResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Server)
+	out := new(RemoveServerResponse)
 	err := c.cc.Invoke(ctx, DeploymentService_RemoveServer_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func (c *deploymentServiceClient) RemoveServer(ctx context.Context, in *Server, 
 type DeploymentServiceServer interface {
 	ListServers(context.Context, *ListServersRequest) (*ListServersResponse, error)
 	AddServer(context.Context, *AddServerRequest) (*AddServerResponse, error)
-	RemoveServer(context.Context, *Server) (*Server, error)
+	RemoveServer(context.Context, *RemoveServerRequest) (*RemoveServerResponse, error)
 	mustEmbedUnimplementedDeploymentServiceServer()
 }
 
@@ -94,7 +94,7 @@ func (UnimplementedDeploymentServiceServer) ListServers(context.Context, *ListSe
 func (UnimplementedDeploymentServiceServer) AddServer(context.Context, *AddServerRequest) (*AddServerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddServer not implemented")
 }
-func (UnimplementedDeploymentServiceServer) RemoveServer(context.Context, *Server) (*Server, error) {
+func (UnimplementedDeploymentServiceServer) RemoveServer(context.Context, *RemoveServerRequest) (*RemoveServerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveServer not implemented")
 }
 func (UnimplementedDeploymentServiceServer) mustEmbedUnimplementedDeploymentServiceServer() {}
@@ -155,7 +155,7 @@ func _DeploymentService_AddServer_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _DeploymentService_RemoveServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Server)
+	in := new(RemoveServerRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func _DeploymentService_RemoveServer_Handler(srv interface{}, ctx context.Contex
 		FullMethod: DeploymentService_RemoveServer_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeploymentServiceServer).RemoveServer(ctx, req.(*Server))
+		return srv.(DeploymentServiceServer).RemoveServer(ctx, req.(*RemoveServerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
