@@ -6,7 +6,7 @@ import "google/protobuf/struct.proto";
 
 option go_package = "gen/go/codegen";
 
-service CodegenService {
+service ProjectService {
   rpc GetUniqueUserProject(GetUniqueUserProjectRequest) returns (ProjectResponse);
   rpc GetAllUserProjects(GetAllUserProjectsRequest) returns (ListOfProjectsResponse);
   rpc InitProject(InitProjectRequest) returns (ProjectResponse);
