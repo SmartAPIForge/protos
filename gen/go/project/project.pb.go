@@ -549,7 +549,7 @@ var file_project_project_proto_rawDesc = []byte{
 	0x45, 0x4e, 0x44, 0x49, 0x4e, 0x47, 0x10, 0x05, 0x12, 0x12, 0x0a, 0x0e, 0x44, 0x45, 0x50, 0x4c,
 	0x4f, 0x59, 0x5f, 0x53, 0x55, 0x43, 0x43, 0x45, 0x53, 0x53, 0x10, 0x06, 0x12, 0x0f, 0x0a, 0x0b,
 	0x44, 0x45, 0x50, 0x4c, 0x4f, 0x59, 0x5f, 0x46, 0x41, 0x49, 0x4c, 0x10, 0x07, 0x32, 0xad, 0x03,
-	0x0a, 0x0e, 0x43, 0x6f, 0x64, 0x65, 0x67, 0x65, 0x6e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x0a, 0x0e, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
 	0x12, 0x56, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x55, 0x6e, 0x69, 0x71, 0x75, 0x65, 0x55, 0x73, 0x65,
 	0x72, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65,
 	0x63, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x6e, 0x69, 0x71, 0x75, 0x65, 0x55, 0x73, 0x65, 0x72,
@@ -616,16 +616,16 @@ var file_project_project_proto_depIdxs = []int32{
 	6,  // 6: project.ListOfProjectsResponse.projects:type_name -> project.ProjectResponse
 	1,  // 7: project.ProjectStatusResponse.id:type_name -> project.ProjectUniqueIdentifier
 	0,  // 8: project.ProjectStatusResponse.status:type_name -> project.ProjectStatus
-	2,  // 9: project.CodegenService.GetUniqueUserProject:input_type -> project.GetUniqueUserProjectRequest
-	3,  // 10: project.CodegenService.GetAllUserProjects:input_type -> project.GetAllUserProjectsRequest
-	4,  // 11: project.CodegenService.InitProject:input_type -> project.InitProjectRequest
-	5,  // 12: project.CodegenService.UpdateProject:input_type -> project.UpdateProjectRequest
-	1,  // 13: project.CodegenService.WatchProjectStatus:input_type -> project.ProjectUniqueIdentifier
-	6,  // 14: project.CodegenService.GetUniqueUserProject:output_type -> project.ProjectResponse
-	7,  // 15: project.CodegenService.GetAllUserProjects:output_type -> project.ListOfProjectsResponse
-	6,  // 16: project.CodegenService.InitProject:output_type -> project.ProjectResponse
-	6,  // 17: project.CodegenService.UpdateProject:output_type -> project.ProjectResponse
-	8,  // 18: project.CodegenService.WatchProjectStatus:output_type -> project.ProjectStatusResponse
+	2,  // 9: project.ProjectService.GetUniqueUserProject:input_type -> project.GetUniqueUserProjectRequest
+	3,  // 10: project.ProjectService.GetAllUserProjects:input_type -> project.GetAllUserProjectsRequest
+	4,  // 11: project.ProjectService.InitProject:input_type -> project.InitProjectRequest
+	5,  // 12: project.ProjectService.UpdateProject:input_type -> project.UpdateProjectRequest
+	1,  // 13: project.ProjectService.WatchProjectStatus:input_type -> project.ProjectUniqueIdentifier
+	6,  // 14: project.ProjectService.GetUniqueUserProject:output_type -> project.ProjectResponse
+	7,  // 15: project.ProjectService.GetAllUserProjects:output_type -> project.ListOfProjectsResponse
+	6,  // 16: project.ProjectService.InitProject:output_type -> project.ProjectResponse
+	6,  // 17: project.ProjectService.UpdateProject:output_type -> project.ProjectResponse
+	8,  // 18: project.ProjectService.WatchProjectStatus:output_type -> project.ProjectStatusResponse
 	14, // [14:19] is the sub-list for method output_type
 	9,  // [9:14] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
