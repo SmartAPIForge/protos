@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package project;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "gen/go/codegen";
+
+service CodegenService {
+  rpc GetUniqueUserProject(GetUniqueUserProjectRequest) returns (ProjectResponse);
+  rpc GetAllUserProjects(GetAllUserProjectsRequest) returns (ListOfProjectsResponse);
+  rpc InitProject(InitProjectRequest) returns (ProjectResponse);
+  rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
+  rpc WatchProjectStatus (ProjectUniqueIdentifier) returns (stream ProjectStatusResponse);
+}
+
+// REQUEST
+
+message ProjectUniqueIdentifier {
+  string owner = 1;
+  string name = 2;
+}
+
+message GetUniqueUserProjectRequest {
+  ProjectUniqueIdentifier compose_id = 1;
+}
+
+message GetAllUserProjectsRequest {
+  string owner = 1;
+  string page = 2; // current page
+  string limit = 3; // projects per page
+}
+
+message InitProjectRequest {
+  ProjectUniqueIdentifier compose_id = 1;
+}
+
+message UpdateProjectRequest {
+  ProjectUniqueIdentifier compose_id = 1;
+  google.protobuf.Struct data = 2;
+}
+
+// RESPONSE
+
+message ProjectResponse {
+  ProjectUniqueIdentifier compose_id = 1;
+  google.protobuf.Struct data = 2;
+}
+
+message ListOfProjectsResponse {
+  repeated ProjectResponse projects = 1;
+}
+
+message ProjectStatusResponse {
+  ProjectUniqueIdentifier id = 1;
+  ProjectStatus status = 2;
+}
+
+enum ProjectStatus {
+  NEW = 0; // successfully created
+
+  GENERATE_PENDING = 2;
+  GENERATE_SUCCESS = 3;
+  GENERATE_FAIL = 4;
+
+  DEPLOY_PENDING = 5;
+  DEPLOY_SUCCESS = 6;
+  DEPLOY_FAIL = 7;
+}
