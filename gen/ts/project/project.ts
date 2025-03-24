@@ -68,7 +68,7 @@ export const PROJECT_PACKAGE_NAME = "project";
 
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
-export interface CodegenServiceClient {
+export interface ProjectServiceClient {
   getUniqueUserProject(request: GetUniqueUserProjectRequest): Observable<ProjectResponse>;
 
   getAllUserProjects(request: GetAllUserProjectsRequest): Observable<ListOfProjectsResponse>;
@@ -80,7 +80,7 @@ export interface CodegenServiceClient {
   watchProjectStatus(request: ProjectUniqueIdentifier): Observable<ProjectStatusResponse>;
 }
 
-export interface CodegenServiceController {
+export interface ProjectServiceController {
   getUniqueUserProject(
     request: GetUniqueUserProjectRequest,
   ): Promise<ProjectResponse> | Observable<ProjectResponse> | ProjectResponse;
@@ -98,7 +98,7 @@ export interface CodegenServiceController {
   watchProjectStatus(request: ProjectUniqueIdentifier): Observable<ProjectStatusResponse>;
 }
 
-export function CodegenServiceControllerMethods() {
+export function ProjectServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
       "getUniqueUserProject",
@@ -109,14 +109,14 @@ export function CodegenServiceControllerMethods() {
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("CodegenService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod("ProjectService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("CodegenService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod("ProjectService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const CODEGEN_SERVICE_NAME = "CodegenService";
+export const PROJECT_SERVICE_NAME = "ProjectService";

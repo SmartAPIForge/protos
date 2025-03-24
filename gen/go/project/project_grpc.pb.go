@@ -19,17 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CodegenService_GetUniqueUserProject_FullMethodName = "/project.CodegenService/GetUniqueUserProject"
-	CodegenService_GetAllUserProjects_FullMethodName   = "/project.CodegenService/GetAllUserProjects"
-	CodegenService_InitProject_FullMethodName          = "/project.CodegenService/InitProject"
-	CodegenService_UpdateProject_FullMethodName        = "/project.CodegenService/UpdateProject"
-	CodegenService_WatchProjectStatus_FullMethodName   = "/project.CodegenService/WatchProjectStatus"
+	ProjectService_GetUniqueUserProject_FullMethodName = "/project.ProjectService/GetUniqueUserProject"
+	ProjectService_GetAllUserProjects_FullMethodName   = "/project.ProjectService/GetAllUserProjects"
+	ProjectService_InitProject_FullMethodName          = "/project.ProjectService/InitProject"
+	ProjectService_UpdateProject_FullMethodName        = "/project.ProjectService/UpdateProject"
+	ProjectService_WatchProjectStatus_FullMethodName   = "/project.ProjectService/WatchProjectStatus"
 )
 
-// CodegenServiceClient is the client API for CodegenService service.
+// ProjectServiceClient is the client API for ProjectService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type CodegenServiceClient interface {
+type ProjectServiceClient interface {
 	GetUniqueUserProject(ctx context.Context, in *GetUniqueUserProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	GetAllUserProjects(ctx context.Context, in *GetAllUserProjectsRequest, opts ...grpc.CallOption) (*ListOfProjectsResponse, error)
 	InitProject(ctx context.Context, in *InitProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
@@ -37,57 +37,57 @@ type CodegenServiceClient interface {
 	WatchProjectStatus(ctx context.Context, in *ProjectUniqueIdentifier, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectStatusResponse], error)
 }
 
-type codegenServiceClient struct {
+type projectServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewCodegenServiceClient(cc grpc.ClientConnInterface) CodegenServiceClient {
-	return &codegenServiceClient{cc}
+func NewProjectServiceClient(cc grpc.ClientConnInterface) ProjectServiceClient {
+	return &projectServiceClient{cc}
 }
 
-func (c *codegenServiceClient) GetUniqueUserProject(ctx context.Context, in *GetUniqueUserProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
+func (c *projectServiceClient) GetUniqueUserProject(ctx context.Context, in *GetUniqueUserProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProjectResponse)
-	err := c.cc.Invoke(ctx, CodegenService_GetUniqueUserProject_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ProjectService_GetUniqueUserProject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *codegenServiceClient) GetAllUserProjects(ctx context.Context, in *GetAllUserProjectsRequest, opts ...grpc.CallOption) (*ListOfProjectsResponse, error) {
+func (c *projectServiceClient) GetAllUserProjects(ctx context.Context, in *GetAllUserProjectsRequest, opts ...grpc.CallOption) (*ListOfProjectsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListOfProjectsResponse)
-	err := c.cc.Invoke(ctx, CodegenService_GetAllUserProjects_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ProjectService_GetAllUserProjects_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *codegenServiceClient) InitProject(ctx context.Context, in *InitProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
+func (c *projectServiceClient) InitProject(ctx context.Context, in *InitProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProjectResponse)
-	err := c.cc.Invoke(ctx, CodegenService_InitProject_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ProjectService_InitProject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *codegenServiceClient) UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
+func (c *projectServiceClient) UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProjectResponse)
-	err := c.cc.Invoke(ctx, CodegenService_UpdateProject_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ProjectService_UpdateProject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *codegenServiceClient) WatchProjectStatus(ctx context.Context, in *ProjectUniqueIdentifier, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectStatusResponse], error) {
+func (c *projectServiceClient) WatchProjectStatus(ctx context.Context, in *ProjectUniqueIdentifier, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectStatusResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &CodegenService_ServiceDesc.Streams[0], CodegenService_WatchProjectStatus_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], ProjectService_WatchProjectStatus_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -102,174 +102,174 @@ func (c *codegenServiceClient) WatchProjectStatus(ctx context.Context, in *Proje
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type CodegenService_WatchProjectStatusClient = grpc.ServerStreamingClient[ProjectStatusResponse]
+type ProjectService_WatchProjectStatusClient = grpc.ServerStreamingClient[ProjectStatusResponse]
 
-// CodegenServiceServer is the server API for CodegenService service.
-// All implementations must embed UnimplementedCodegenServiceServer
+// ProjectServiceServer is the server API for ProjectService service.
+// All implementations must embed UnimplementedProjectServiceServer
 // for forward compatibility.
-type CodegenServiceServer interface {
+type ProjectServiceServer interface {
 	GetUniqueUserProject(context.Context, *GetUniqueUserProjectRequest) (*ProjectResponse, error)
 	GetAllUserProjects(context.Context, *GetAllUserProjectsRequest) (*ListOfProjectsResponse, error)
 	InitProject(context.Context, *InitProjectRequest) (*ProjectResponse, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error)
 	WatchProjectStatus(*ProjectUniqueIdentifier, grpc.ServerStreamingServer[ProjectStatusResponse]) error
-	mustEmbedUnimplementedCodegenServiceServer()
+	mustEmbedUnimplementedProjectServiceServer()
 }
 
-// UnimplementedCodegenServiceServer must be embedded to have
+// UnimplementedProjectServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedCodegenServiceServer struct{}
+type UnimplementedProjectServiceServer struct{}
 
-func (UnimplementedCodegenServiceServer) GetUniqueUserProject(context.Context, *GetUniqueUserProjectRequest) (*ProjectResponse, error) {
+func (UnimplementedProjectServiceServer) GetUniqueUserProject(context.Context, *GetUniqueUserProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUniqueUserProject not implemented")
 }
-func (UnimplementedCodegenServiceServer) GetAllUserProjects(context.Context, *GetAllUserProjectsRequest) (*ListOfProjectsResponse, error) {
+func (UnimplementedProjectServiceServer) GetAllUserProjects(context.Context, *GetAllUserProjectsRequest) (*ListOfProjectsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllUserProjects not implemented")
 }
-func (UnimplementedCodegenServiceServer) InitProject(context.Context, *InitProjectRequest) (*ProjectResponse, error) {
+func (UnimplementedProjectServiceServer) InitProject(context.Context, *InitProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitProject not implemented")
 }
-func (UnimplementedCodegenServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error) {
+func (UnimplementedProjectServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
 }
-func (UnimplementedCodegenServiceServer) WatchProjectStatus(*ProjectUniqueIdentifier, grpc.ServerStreamingServer[ProjectStatusResponse]) error {
+func (UnimplementedProjectServiceServer) WatchProjectStatus(*ProjectUniqueIdentifier, grpc.ServerStreamingServer[ProjectStatusResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method WatchProjectStatus not implemented")
 }
-func (UnimplementedCodegenServiceServer) mustEmbedUnimplementedCodegenServiceServer() {}
-func (UnimplementedCodegenServiceServer) testEmbeddedByValue()                        {}
+func (UnimplementedProjectServiceServer) mustEmbedUnimplementedProjectServiceServer() {}
+func (UnimplementedProjectServiceServer) testEmbeddedByValue()                        {}
 
-// UnsafeCodegenServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CodegenServiceServer will
+// UnsafeProjectServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProjectServiceServer will
 // result in compilation errors.
-type UnsafeCodegenServiceServer interface {
-	mustEmbedUnimplementedCodegenServiceServer()
+type UnsafeProjectServiceServer interface {
+	mustEmbedUnimplementedProjectServiceServer()
 }
 
-func RegisterCodegenServiceServer(s grpc.ServiceRegistrar, srv CodegenServiceServer) {
-	// If the following call pancis, it indicates UnimplementedCodegenServiceServer was
+func RegisterProjectServiceServer(s grpc.ServiceRegistrar, srv ProjectServiceServer) {
+	// If the following call pancis, it indicates UnimplementedProjectServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&CodegenService_ServiceDesc, srv)
+	s.RegisterService(&ProjectService_ServiceDesc, srv)
 }
 
-func _CodegenService_GetUniqueUserProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProjectService_GetUniqueUserProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUniqueUserProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CodegenServiceServer).GetUniqueUserProject(ctx, in)
+		return srv.(ProjectServiceServer).GetUniqueUserProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CodegenService_GetUniqueUserProject_FullMethodName,
+		FullMethod: ProjectService_GetUniqueUserProject_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CodegenServiceServer).GetUniqueUserProject(ctx, req.(*GetUniqueUserProjectRequest))
+		return srv.(ProjectServiceServer).GetUniqueUserProject(ctx, req.(*GetUniqueUserProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CodegenService_GetAllUserProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProjectService_GetAllUserProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAllUserProjectsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CodegenServiceServer).GetAllUserProjects(ctx, in)
+		return srv.(ProjectServiceServer).GetAllUserProjects(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CodegenService_GetAllUserProjects_FullMethodName,
+		FullMethod: ProjectService_GetAllUserProjects_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CodegenServiceServer).GetAllUserProjects(ctx, req.(*GetAllUserProjectsRequest))
+		return srv.(ProjectServiceServer).GetAllUserProjects(ctx, req.(*GetAllUserProjectsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CodegenService_InitProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProjectService_InitProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(InitProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CodegenServiceServer).InitProject(ctx, in)
+		return srv.(ProjectServiceServer).InitProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CodegenService_InitProject_FullMethodName,
+		FullMethod: ProjectService_InitProject_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CodegenServiceServer).InitProject(ctx, req.(*InitProjectRequest))
+		return srv.(ProjectServiceServer).InitProject(ctx, req.(*InitProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CodegenService_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProjectService_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CodegenServiceServer).UpdateProject(ctx, in)
+		return srv.(ProjectServiceServer).UpdateProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CodegenService_UpdateProject_FullMethodName,
+		FullMethod: ProjectService_UpdateProject_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CodegenServiceServer).UpdateProject(ctx, req.(*UpdateProjectRequest))
+		return srv.(ProjectServiceServer).UpdateProject(ctx, req.(*UpdateProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CodegenService_WatchProjectStatus_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _ProjectService_WatchProjectStatus_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(ProjectUniqueIdentifier)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(CodegenServiceServer).WatchProjectStatus(m, &grpc.GenericServerStream[ProjectUniqueIdentifier, ProjectStatusResponse]{ServerStream: stream})
+	return srv.(ProjectServiceServer).WatchProjectStatus(m, &grpc.GenericServerStream[ProjectUniqueIdentifier, ProjectStatusResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type CodegenService_WatchProjectStatusServer = grpc.ServerStreamingServer[ProjectStatusResponse]
+type ProjectService_WatchProjectStatusServer = grpc.ServerStreamingServer[ProjectStatusResponse]
 
-// CodegenService_ServiceDesc is the grpc.ServiceDesc for CodegenService service.
+// ProjectService_ServiceDesc is the grpc.ServiceDesc for ProjectService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var CodegenService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "project.CodegenService",
-	HandlerType: (*CodegenServiceServer)(nil),
+var ProjectService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "project.ProjectService",
+	HandlerType: (*ProjectServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetUniqueUserProject",
-			Handler:    _CodegenService_GetUniqueUserProject_Handler,
+			Handler:    _ProjectService_GetUniqueUserProject_Handler,
 		},
 		{
 			MethodName: "GetAllUserProjects",
-			Handler:    _CodegenService_GetAllUserProjects_Handler,
+			Handler:    _ProjectService_GetAllUserProjects_Handler,
 		},
 		{
 			MethodName: "InitProject",
-			Handler:    _CodegenService_InitProject_Handler,
+			Handler:    _ProjectService_InitProject_Handler,
 		},
 		{
 			MethodName: "UpdateProject",
-			Handler:    _CodegenService_UpdateProject_Handler,
+			Handler:    _ProjectService_UpdateProject_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "WatchProjectStatus",
-			Handler:       _CodegenService_WatchProjectStatus_Handler,
+			Handler:       _ProjectService_WatchProjectStatus_Handler,
 			ServerStreams: true,
 		},
 	},
