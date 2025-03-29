@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package project;
 
-import "google/protobuf/struct.proto";
-
 option go_package = "gen/go/codegen";
 
 service ProjectService {
@@ -37,14 +35,14 @@ message InitProjectRequest {
 
 message UpdateProjectRequest {
   ProjectUniqueIdentifier compose_id = 1;
-  google.protobuf.Struct data = 2;
+  string data = 2;
 }
 
 // RESPONSE
 
 message ProjectResponse {
   ProjectUniqueIdentifier compose_id = 1;
-  google.protobuf.Struct data = 2;
+  string data = 2;
 }
 
 message ListOfProjectsResponse {
@@ -57,7 +55,7 @@ message ProjectStatusResponse {
 }
 
 enum ProjectStatus {
-  NEW = 0; // successfully created
+  NEW = 0;
 
   GENERATE_PENDING = 2;
   GENERATE_SUCCESS = 3;

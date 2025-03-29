@@ -6,14 +6,11 @@
 
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
-import { Struct } from "../google/protobuf/struct";
 
 export const protobufPackage = "project";
 
 export enum ProjectStatus {
-  /** NEW - successfully created */
   NEW = 0,
   GENERATE_PENDING = 2,
   GENERATE_SUCCESS = 3,
@@ -50,12 +47,12 @@ export interface InitProjectRequest {
 
 export interface UpdateProjectRequest {
   composeId: ProjectUniqueIdentifier | undefined;
-  data: { [key: string]: any } | undefined;
+  data: string;
 }
 
 export interface ProjectResponse {
   composeId: ProjectUniqueIdentifier | undefined;
-  data: { [key: string]: any } | undefined;
+  data: string;
 }
 
 export interface ListOfProjectsResponse {
@@ -68,8 +65,6 @@ export interface ProjectStatusResponse {
 }
 
 export const PROJECT_PACKAGE_NAME = "project";
-
-wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface ProjectServiceClient {
   getUniqueUserProject(request: GetUniqueUserProjectRequest): Observable<ProjectResponse>;
