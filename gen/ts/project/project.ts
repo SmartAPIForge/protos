@@ -21,6 +21,9 @@ export enum ProjectStatus {
   DEPLOY_PENDING = 5,
   DEPLOY_SUCCESS = 6,
   DEPLOY_FAIL = 7,
+  RUNNING = 8,
+  STOPPED = 9,
+  FAILED = 10,
   UNRECOGNIZED = -1,
 }
 
