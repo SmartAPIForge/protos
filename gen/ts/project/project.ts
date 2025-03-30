@@ -36,6 +36,14 @@ export interface UpdateProjectRequest {
   data: string;
 }
 
+export interface GetFilteredProjectsRequest {
+  Page: string;
+  Limit: string;
+  Owner: string;
+  Status: string;
+  NamePrefix: string;
+}
+
 export interface ProjectInfo {
   data: string;
   status: string;
@@ -54,6 +62,10 @@ export interface ListOfProjectsResponse {
   projects: ProjectResponse[];
 }
 
+export interface DeleteProjectResponse {
+  Success: boolean;
+}
+
 export const PROJECT_PACKAGE_NAME = "project";
 
 export interface ProjectServiceClient {
@@ -64,6 +76,10 @@ export interface ProjectServiceClient {
   initProject(request: InitProjectRequest): Observable<ProjectResponse>;
 
   updateProject(request: UpdateProjectRequest): Observable<ProjectResponse>;
+
+  getFilteredProjects(request: GetFilteredProjectsRequest): Observable<ListOfProjectsResponse>;
+
+  deleteProject(request: ProjectUniqueIdentifier): Observable<DeleteProjectResponse>;
 }
 
 export interface ProjectServiceController {
@@ -78,11 +94,26 @@ export interface ProjectServiceController {
   updateProject(
     request: UpdateProjectRequest,
   ): Promise<ProjectResponse> | Observable<ProjectResponse> | ProjectResponse;
+
+  getFilteredProjects(
+    request: GetFilteredProjectsRequest,
+  ): Promise<ListOfProjectsResponse> | Observable<ListOfProjectsResponse> | ListOfProjectsResponse;
+
+  deleteProject(
+    request: ProjectUniqueIdentifier,
+  ): Promise<DeleteProjectResponse> | Observable<DeleteProjectResponse> | DeleteProjectResponse;
 }
 
 export function ProjectServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getAllUserProjects", "streamUserProjectsUpdates", "initProject", "updateProject"];
+    const grpcMethods: string[] = [
+      "getAllUserProjects",
+      "streamUserProjectsUpdates",
+      "initProject",
+      "updateProject",
+      "getFilteredProjects",
+      "deleteProject",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ProjectService", method)(constructor.prototype[method], method, descriptor);

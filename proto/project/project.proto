@@ -9,6 +9,8 @@ service ProjectService {
   rpc StreamUserProjectsUpdates (Owner) returns (stream ProjectResponse);
   rpc InitProject(InitProjectRequest) returns (ProjectResponse);
   rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
+  rpc GetFilteredProjects(GetFilteredProjectsRequest) returns (ListOfProjectsResponse);
+  rpc DeleteProject(ProjectUniqueIdentifier) returns (DeleteProjectResponse);
 }
 
 // REQUEST
@@ -37,6 +39,14 @@ message UpdateProjectRequest {
   string data = 2;
 }
 
+message GetFilteredProjectsRequest {
+  string Page = 1;
+  string Limit = 2;
+  string Owner = 3;
+  string Status = 4;
+  string NamePrefix = 5;
+}
+
 // RESPONSE
 
 message ProjectInfo {
@@ -55,4 +65,8 @@ message ProjectResponse {
 
 message ListOfProjectsResponse {
   repeated ProjectResponse projects = 1;
+}
+
+message DeleteProjectResponse {
+  bool Success = 1;
 }

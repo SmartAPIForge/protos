@@ -23,6 +23,8 @@ const (
 	ProjectService_StreamUserProjectsUpdates_FullMethodName = "/project.ProjectService/StreamUserProjectsUpdates"
 	ProjectService_InitProject_FullMethodName               = "/project.ProjectService/InitProject"
 	ProjectService_UpdateProject_FullMethodName             = "/project.ProjectService/UpdateProject"
+	ProjectService_GetFilteredProjects_FullMethodName       = "/project.ProjectService/GetFilteredProjects"
+	ProjectService_DeleteProject_FullMethodName             = "/project.ProjectService/DeleteProject"
 )
 
 // ProjectServiceClient is the client API for ProjectService service.
@@ -33,6 +35,8 @@ type ProjectServiceClient interface {
 	StreamUserProjectsUpdates(ctx context.Context, in *Owner, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectResponse], error)
 	InitProject(ctx context.Context, in *InitProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
+	GetFilteredProjects(ctx context.Context, in *GetFilteredProjectsRequest, opts ...grpc.CallOption) (*ListOfProjectsResponse, error)
+	DeleteProject(ctx context.Context, in *ProjectUniqueIdentifier, opts ...grpc.CallOption) (*DeleteProjectResponse, error)
 }
 
 type projectServiceClient struct {
@@ -92,6 +96,26 @@ func (c *projectServiceClient) UpdateProject(ctx context.Context, in *UpdateProj
 	return out, nil
 }
 
+func (c *projectServiceClient) GetFilteredProjects(ctx context.Context, in *GetFilteredProjectsRequest, opts ...grpc.CallOption) (*ListOfProjectsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListOfProjectsResponse)
+	err := c.cc.Invoke(ctx, ProjectService_GetFilteredProjects_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) DeleteProject(ctx context.Context, in *ProjectUniqueIdentifier, opts ...grpc.CallOption) (*DeleteProjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteProjectResponse)
+	err := c.cc.Invoke(ctx, ProjectService_DeleteProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProjectServiceServer is the server API for ProjectService service.
 // All implementations must embed UnimplementedProjectServiceServer
 // for forward compatibility.
@@ -100,6 +124,8 @@ type ProjectServiceServer interface {
 	StreamUserProjectsUpdates(*Owner, grpc.ServerStreamingServer[ProjectResponse]) error
 	InitProject(context.Context, *InitProjectRequest) (*ProjectResponse, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error)
+	GetFilteredProjects(context.Context, *GetFilteredProjectsRequest) (*ListOfProjectsResponse, error)
+	DeleteProject(context.Context, *ProjectUniqueIdentifier) (*DeleteProjectResponse, error)
 	mustEmbedUnimplementedProjectServiceServer()
 }
 
@@ -121,6 +147,12 @@ func (UnimplementedProjectServiceServer) InitProject(context.Context, *InitProje
 }
 func (UnimplementedProjectServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
+}
+func (UnimplementedProjectServiceServer) GetFilteredProjects(context.Context, *GetFilteredProjectsRequest) (*ListOfProjectsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFilteredProjects not implemented")
+}
+func (UnimplementedProjectServiceServer) DeleteProject(context.Context, *ProjectUniqueIdentifier) (*DeleteProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProject not implemented")
 }
 func (UnimplementedProjectServiceServer) mustEmbedUnimplementedProjectServiceServer() {}
 func (UnimplementedProjectServiceServer) testEmbeddedByValue()                        {}
@@ -208,6 +240,42 @@ func _ProjectService_UpdateProject_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProjectService_GetFilteredProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFilteredProjectsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GetFilteredProjects(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProjectService_GetFilteredProjects_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GetFilteredProjects(ctx, req.(*GetFilteredProjectsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProjectUniqueIdentifier)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).DeleteProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProjectService_DeleteProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).DeleteProject(ctx, req.(*ProjectUniqueIdentifier))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProjectService_ServiceDesc is the grpc.ServiceDesc for ProjectService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -226,6 +294,14 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateProject",
 			Handler:    _ProjectService_UpdateProject_Handler,
+		},
+		{
+			MethodName: "GetFilteredProjects",
+			Handler:    _ProjectService_GetFilteredProjects_Handler,
+		},
+		{
+			MethodName: "DeleteProject",
+			Handler:    _ProjectService_DeleteProject_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
