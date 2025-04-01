@@ -41,7 +41,7 @@ message UpdateProjectRequest {
 
 message ProjectInfo {
   string data = 1;
-  ProjectStatus status = 2;
+  string status = 2;
   string urlZip = 3;
   string urlDeploy = 4;
   int64 updatedAt = 5;
@@ -55,20 +55,4 @@ message ProjectResponse {
 
 message ListOfProjectsResponse {
   repeated ProjectResponse projects = 1;
-}
-
-enum ProjectStatus {
-  NEW = 0;
-
-  GENERATE_PENDING = 2;
-  GENERATE_SUCCESS = 3;
-  GENERATE_FAIL = 4;
-
-  DEPLOY_PENDING = 5;
-  DEPLOY_SUCCESS = 6;
-  DEPLOY_FAIL = 7;
-
-  RUNNING = 8;
-  STOPPED = 9;
-  FAILED = 10;
 }

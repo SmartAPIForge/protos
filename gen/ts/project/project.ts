@@ -10,20 +10,6 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "project";
 
-export enum ProjectStatus {
-  NEW = 0,
-  GENERATE_PENDING = 2,
-  GENERATE_SUCCESS = 3,
-  GENERATE_FAIL = 4,
-  DEPLOY_PENDING = 5,
-  DEPLOY_SUCCESS = 6,
-  DEPLOY_FAIL = 7,
-  RUNNING = 8,
-  STOPPED = 9,
-  FAILED = 10,
-  UNRECOGNIZED = -1,
-}
-
 export interface Owner {
   owner: string;
 }
@@ -52,7 +38,7 @@ export interface UpdateProjectRequest {
 
 export interface ProjectInfo {
   data: string;
-  status: ProjectStatus;
+  status: string;
   urlZip: string;
   urlDeploy: string;
   updatedAt: number;
