@@ -24,13 +24,8 @@ export enum ProjectStatus {
   UNRECOGNIZED = -1,
 }
 
-export interface ProjectUniqueIdentifier {
+export interface Owner {
   owner: string;
-  name: string;
-}
-
-export interface GetUniqueUserProjectRequest {
-  composeId: ProjectUniqueIdentifier | undefined;
 }
 
 export interface GetAllUserProjectsRequest {
@@ -39,6 +34,11 @@ export interface GetAllUserProjectsRequest {
   page: string;
   /** projects per page */
   limit: string;
+}
+
+export interface ProjectUniqueIdentifier {
+  owner: string;
+  name: string;
 }
 
 export interface InitProjectRequest {
@@ -50,61 +50,53 @@ export interface UpdateProjectRequest {
   data: string;
 }
 
+export interface ProjectInfo {
+  data: string;
+  status: ProjectStatus;
+  urlZip: string;
+  urlDeploy: string;
+  updatedAt: number;
+  createdAt: number;
+}
+
 export interface ProjectResponse {
   composeId: ProjectUniqueIdentifier | undefined;
-  data: string;
+  info: ProjectInfo | undefined;
 }
 
 export interface ListOfProjectsResponse {
   projects: ProjectResponse[];
 }
 
-export interface ProjectStatusResponse {
-  id: ProjectUniqueIdentifier | undefined;
-  status: ProjectStatus;
-}
-
 export const PROJECT_PACKAGE_NAME = "project";
 
 export interface ProjectServiceClient {
-  getUniqueUserProject(request: GetUniqueUserProjectRequest): Observable<ProjectResponse>;
-
   getAllUserProjects(request: GetAllUserProjectsRequest): Observable<ListOfProjectsResponse>;
+
+  streamUserProjectsUpdates(request: Owner): Observable<ProjectResponse>;
 
   initProject(request: InitProjectRequest): Observable<ProjectResponse>;
 
   updateProject(request: UpdateProjectRequest): Observable<ProjectResponse>;
-
-  watchProjectStatus(request: ProjectUniqueIdentifier): Observable<ProjectStatusResponse>;
 }
 
 export interface ProjectServiceController {
-  getUniqueUserProject(
-    request: GetUniqueUserProjectRequest,
-  ): Promise<ProjectResponse> | Observable<ProjectResponse> | ProjectResponse;
-
   getAllUserProjects(
     request: GetAllUserProjectsRequest,
   ): Promise<ListOfProjectsResponse> | Observable<ListOfProjectsResponse> | ListOfProjectsResponse;
+
+  streamUserProjectsUpdates(request: Owner): Observable<ProjectResponse>;
 
   initProject(request: InitProjectRequest): Promise<ProjectResponse> | Observable<ProjectResponse> | ProjectResponse;
 
   updateProject(
     request: UpdateProjectRequest,
   ): Promise<ProjectResponse> | Observable<ProjectResponse> | ProjectResponse;
-
-  watchProjectStatus(request: ProjectUniqueIdentifier): Observable<ProjectStatusResponse>;
 }
 
 export function ProjectServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = [
-      "getUniqueUserProject",
-      "getAllUserProjects",
-      "initProject",
-      "updateProject",
-      "watchProjectStatus",
-    ];
+    const grpcMethods: string[] = ["getAllUserProjects", "streamUserProjectsUpdates", "initProject", "updateProject"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ProjectService", method)(constructor.prototype[method], method, descriptor);

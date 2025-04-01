@@ -5,22 +5,16 @@ package project;
 option go_package = "gen/go/codegen";
 
 service ProjectService {
-  rpc GetUniqueUserProject(GetUniqueUserProjectRequest) returns (ProjectResponse);
   rpc GetAllUserProjects(GetAllUserProjectsRequest) returns (ListOfProjectsResponse);
+  rpc StreamUserProjectsUpdates (Owner) returns (stream ProjectResponse);
   rpc InitProject(InitProjectRequest) returns (ProjectResponse);
   rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
-  rpc WatchProjectStatus (ProjectUniqueIdentifier) returns (stream ProjectStatusResponse);
 }
 
 // REQUEST
 
-message ProjectUniqueIdentifier {
+message Owner {
   string owner = 1;
-  string name = 2;
-}
-
-message GetUniqueUserProjectRequest {
-  ProjectUniqueIdentifier compose_id = 1;
 }
 
 message GetAllUserProjectsRequest {
@@ -29,29 +23,38 @@ message GetAllUserProjectsRequest {
   string limit = 3; // projects per page
 }
 
+message ProjectUniqueIdentifier {
+  string owner = 1;
+  string name = 2;
+}
+
 message InitProjectRequest {
-  ProjectUniqueIdentifier compose_id = 1;
+  ProjectUniqueIdentifier composeId = 1;
 }
 
 message UpdateProjectRequest {
-  ProjectUniqueIdentifier compose_id = 1;
+  ProjectUniqueIdentifier composeId = 1;
   string data = 2;
 }
 
 // RESPONSE
 
+message ProjectInfo {
+  string data = 1;
+  ProjectStatus status = 2;
+  string urlZip = 3;
+  string urlDeploy = 4;
+  int64 updatedAt = 5;
+  int64 createdAt = 6;
+}
+
 message ProjectResponse {
-  ProjectUniqueIdentifier compose_id = 1;
-  string data = 2;
+  ProjectUniqueIdentifier composeId = 1;
+  ProjectInfo info = 2;
 }
 
 message ListOfProjectsResponse {
   repeated ProjectResponse projects = 1;
-}
-
-message ProjectStatusResponse {
-  ProjectUniqueIdentifier id = 1;
-  ProjectStatus status = 2;
 }
 
 enum ProjectStatus {

@@ -19,22 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProjectService_GetUniqueUserProject_FullMethodName = "/project.ProjectService/GetUniqueUserProject"
-	ProjectService_GetAllUserProjects_FullMethodName   = "/project.ProjectService/GetAllUserProjects"
-	ProjectService_InitProject_FullMethodName          = "/project.ProjectService/InitProject"
-	ProjectService_UpdateProject_FullMethodName        = "/project.ProjectService/UpdateProject"
-	ProjectService_WatchProjectStatus_FullMethodName   = "/project.ProjectService/WatchProjectStatus"
+	ProjectService_GetAllUserProjects_FullMethodName        = "/project.ProjectService/GetAllUserProjects"
+	ProjectService_StreamUserProjectsUpdates_FullMethodName = "/project.ProjectService/StreamUserProjectsUpdates"
+	ProjectService_InitProject_FullMethodName               = "/project.ProjectService/InitProject"
+	ProjectService_UpdateProject_FullMethodName             = "/project.ProjectService/UpdateProject"
 )
 
 // ProjectServiceClient is the client API for ProjectService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProjectServiceClient interface {
-	GetUniqueUserProject(ctx context.Context, in *GetUniqueUserProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	GetAllUserProjects(ctx context.Context, in *GetAllUserProjectsRequest, opts ...grpc.CallOption) (*ListOfProjectsResponse, error)
+	StreamUserProjectsUpdates(ctx context.Context, in *Owner, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectResponse], error)
 	InitProject(ctx context.Context, in *InitProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
-	WatchProjectStatus(ctx context.Context, in *ProjectUniqueIdentifier, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectStatusResponse], error)
 }
 
 type projectServiceClient struct {
@@ -43,16 +41,6 @@ type projectServiceClient struct {
 
 func NewProjectServiceClient(cc grpc.ClientConnInterface) ProjectServiceClient {
 	return &projectServiceClient{cc}
-}
-
-func (c *projectServiceClient) GetUniqueUserProject(ctx context.Context, in *GetUniqueUserProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ProjectResponse)
-	err := c.cc.Invoke(ctx, ProjectService_GetUniqueUserProject_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *projectServiceClient) GetAllUserProjects(ctx context.Context, in *GetAllUserProjectsRequest, opts ...grpc.CallOption) (*ListOfProjectsResponse, error) {
@@ -64,6 +52,25 @@ func (c *projectServiceClient) GetAllUserProjects(ctx context.Context, in *GetAl
 	}
 	return out, nil
 }
+
+func (c *projectServiceClient) StreamUserProjectsUpdates(ctx context.Context, in *Owner, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], ProjectService_StreamUserProjectsUpdates_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[Owner, ProjectResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ProjectService_StreamUserProjectsUpdatesClient = grpc.ServerStreamingClient[ProjectResponse]
 
 func (c *projectServiceClient) InitProject(ctx context.Context, in *InitProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -85,34 +92,14 @@ func (c *projectServiceClient) UpdateProject(ctx context.Context, in *UpdateProj
 	return out, nil
 }
 
-func (c *projectServiceClient) WatchProjectStatus(ctx context.Context, in *ProjectUniqueIdentifier, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ProjectStatusResponse], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], ProjectService_WatchProjectStatus_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[ProjectUniqueIdentifier, ProjectStatusResponse]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ProjectService_WatchProjectStatusClient = grpc.ServerStreamingClient[ProjectStatusResponse]
-
 // ProjectServiceServer is the server API for ProjectService service.
 // All implementations must embed UnimplementedProjectServiceServer
 // for forward compatibility.
 type ProjectServiceServer interface {
-	GetUniqueUserProject(context.Context, *GetUniqueUserProjectRequest) (*ProjectResponse, error)
 	GetAllUserProjects(context.Context, *GetAllUserProjectsRequest) (*ListOfProjectsResponse, error)
+	StreamUserProjectsUpdates(*Owner, grpc.ServerStreamingServer[ProjectResponse]) error
 	InitProject(context.Context, *InitProjectRequest) (*ProjectResponse, error)
 	UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error)
-	WatchProjectStatus(*ProjectUniqueIdentifier, grpc.ServerStreamingServer[ProjectStatusResponse]) error
 	mustEmbedUnimplementedProjectServiceServer()
 }
 
@@ -123,20 +110,17 @@ type ProjectServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedProjectServiceServer struct{}
 
-func (UnimplementedProjectServiceServer) GetUniqueUserProject(context.Context, *GetUniqueUserProjectRequest) (*ProjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUniqueUserProject not implemented")
-}
 func (UnimplementedProjectServiceServer) GetAllUserProjects(context.Context, *GetAllUserProjectsRequest) (*ListOfProjectsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllUserProjects not implemented")
+}
+func (UnimplementedProjectServiceServer) StreamUserProjectsUpdates(*Owner, grpc.ServerStreamingServer[ProjectResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method StreamUserProjectsUpdates not implemented")
 }
 func (UnimplementedProjectServiceServer) InitProject(context.Context, *InitProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitProject not implemented")
 }
 func (UnimplementedProjectServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
-}
-func (UnimplementedProjectServiceServer) WatchProjectStatus(*ProjectUniqueIdentifier, grpc.ServerStreamingServer[ProjectStatusResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method WatchProjectStatus not implemented")
 }
 func (UnimplementedProjectServiceServer) mustEmbedUnimplementedProjectServiceServer() {}
 func (UnimplementedProjectServiceServer) testEmbeddedByValue()                        {}
@@ -159,24 +143,6 @@ func RegisterProjectServiceServer(s grpc.ServiceRegistrar, srv ProjectServiceSer
 	s.RegisterService(&ProjectService_ServiceDesc, srv)
 }
 
-func _ProjectService_GetUniqueUserProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUniqueUserProjectRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProjectServiceServer).GetUniqueUserProject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ProjectService_GetUniqueUserProject_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).GetUniqueUserProject(ctx, req.(*GetUniqueUserProjectRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ProjectService_GetAllUserProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAllUserProjectsRequest)
 	if err := dec(in); err != nil {
@@ -194,6 +160,17 @@ func _ProjectService_GetAllUserProjects_Handler(srv interface{}, ctx context.Con
 	}
 	return interceptor(ctx, in, info, handler)
 }
+
+func _ProjectService_StreamUserProjectsUpdates_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Owner)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProjectServiceServer).StreamUserProjectsUpdates(m, &grpc.GenericServerStream[Owner, ProjectResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ProjectService_StreamUserProjectsUpdatesServer = grpc.ServerStreamingServer[ProjectResponse]
 
 func _ProjectService_InitProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(InitProjectRequest)
@@ -231,17 +208,6 @@ func _ProjectService_UpdateProject_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_WatchProjectStatus_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ProjectUniqueIdentifier)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(ProjectServiceServer).WatchProjectStatus(m, &grpc.GenericServerStream[ProjectUniqueIdentifier, ProjectStatusResponse]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ProjectService_WatchProjectStatusServer = grpc.ServerStreamingServer[ProjectStatusResponse]
-
 // ProjectService_ServiceDesc is the grpc.ServiceDesc for ProjectService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -249,10 +215,6 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "project.ProjectService",
 	HandlerType: (*ProjectServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetUniqueUserProject",
-			Handler:    _ProjectService_GetUniqueUserProject_Handler,
-		},
 		{
 			MethodName: "GetAllUserProjects",
 			Handler:    _ProjectService_GetAllUserProjects_Handler,
@@ -268,8 +230,8 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "WatchProjectStatus",
-			Handler:       _ProjectService_WatchProjectStatus_Handler,
+			StreamName:    "StreamUserProjectsUpdates",
+			Handler:       _ProjectService_StreamUserProjectsUpdates_Handler,
 			ServerStreams: true,
 		},
 	},
