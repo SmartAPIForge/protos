@@ -102,7 +102,7 @@ message RefreshResponse{
 message User {
   string Username = 1;
   string Email = 2;
-  string RoleId = 3;
+  int64 RoleId = 3;
 }
 
 // user.get-all
