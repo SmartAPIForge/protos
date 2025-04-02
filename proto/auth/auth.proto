@@ -4,6 +4,7 @@ package auth;
 
 option go_package = "gen/go/auth";
 
+import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
 service Auth {
@@ -28,6 +29,24 @@ service Auth {
   rpc Refresh (RefreshRequest) returns (RefreshResponse) {
     option (google.api.http) = {
       post: "/refresh"
+      body: "*"
+    };
+  };
+  rpc GetUsers (GetUsersRequest) returns (GetUsersResponse) {
+    option (google.api.http) = {
+      post: "/users"
+      body: "*"
+    };
+  };
+  rpc GetUserByToken (GetUserByTokenRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/user"
+      body: "*"
+    };
+  };
+  rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/user/rm"
       body: "*"
     };
   };
@@ -76,4 +95,35 @@ message RefreshRequest {
 message RefreshResponse{
   string access_token = 1;
   string refresh_token = 2;
+}
+
+// user
+
+message User {
+  string Username = 1;
+  string Email = 2;
+  string RoleId = 3;
+}
+
+// user.get-all
+
+message GetUsersRequest {
+  int64 RoleId = 1;
+  string NameStartsWith = 2;
+}
+
+message GetUsersResponse {
+  repeated User users = 1;
+}
+
+// user.get-by-token
+
+message GetUserByTokenRequest {
+  string AccessToken = 1;
+}
+
+// user.delete
+
+message DeleteUserRequest {
+  string Username = 1;
 }
