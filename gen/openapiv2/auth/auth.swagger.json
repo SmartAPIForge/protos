@@ -354,7 +354,8 @@
           "type": "string"
         },
         "RoleId": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         }
       }
     },

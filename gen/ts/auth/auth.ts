@@ -51,7 +51,7 @@ export interface RefreshResponse {
 export interface User {
   Username: string;
   Email: string;
-  RoleId: string;
+  RoleId: number;
 }
 
 export interface GetUsersRequest {
