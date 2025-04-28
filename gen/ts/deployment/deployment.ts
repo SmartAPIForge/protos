@@ -7,6 +7,7 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import { Timestamp } from "../google/protobuf/timestamp";
 
 export const protobufPackage = "deployment";
 
@@ -60,17 +61,100 @@ export interface DeployContainerResponse {
   status: string;
 }
 
+/** Deployment messages */
+export interface Deployment {
+  id: string;
+  owner: string;
+  name: string;
+  url: string;
+  status: string;
+  startTime: Timestamp | undefined;
+  endTime: Timestamp | undefined;
+  durationSeconds: number;
+  serverId: number;
+  containerId: string;
+}
+
+/** CRUD requests and responses */
+export interface CreateDeploymentResponse {
+  deployment: Deployment | undefined;
+}
+
+export interface GetDeploymentRequest {
+  id: string;
+}
+
+export interface GetDeploymentResponse {
+  deployment: Deployment | undefined;
+}
+
+export interface ListDeploymentsRequest {
+  /** Optional filter by owner */
+  owner: string;
+}
+
+export interface ListDeploymentsResponse {
+  deployments: Deployment[];
+}
+
+export interface UpdateDeploymentResponse {
+  deployment: Deployment | undefined;
+}
+
+export interface DeleteDeploymentRequest {
+  id: string;
+}
+
+export interface DeleteDeploymentResponse {
+  success: boolean;
+}
+
+/** Control operation requests and responses */
+export interface StartDeploymentRequest {
+  id: string;
+}
+
+export interface StartDeploymentResponse {
+  deployment: Deployment | undefined;
+}
+
+export interface StopDeploymentRequest {
+  id: string;
+}
+
+export interface StopDeploymentResponse {
+  deployment: Deployment | undefined;
+}
+
 export const DEPLOYMENT_PACKAGE_NAME = "deployment";
 
 export interface DeploymentServiceClient {
+  /** Server management */
+
   listServers(request: ListServersRequest): Observable<ListServersResponse>;
 
   addServer(request: AddServerRequest): Observable<AddServerResponse>;
 
   removeServer(request: RemoveServerRequest): Observable<RemoveServerResponse>;
+
+  /** Deployment CRUD operations */
+
+  getDeployment(request: GetDeploymentRequest): Observable<GetDeploymentResponse>;
+
+  listDeployments(request: ListDeploymentsRequest): Observable<ListDeploymentsResponse>;
+
+  deleteDeployment(request: DeleteDeploymentRequest): Observable<DeleteDeploymentResponse>;
+
+  /** Deployment control operations */
+
+  startDeployment(request: StartDeploymentRequest): Observable<StartDeploymentResponse>;
+
+  stopDeployment(request: StopDeploymentRequest): Observable<StopDeploymentResponse>;
 }
 
 export interface DeploymentServiceController {
+  /** Server management */
+
   listServers(
     request: ListServersRequest,
   ): Promise<ListServersResponse> | Observable<ListServersResponse> | ListServersResponse;
@@ -80,11 +164,44 @@ export interface DeploymentServiceController {
   removeServer(
     request: RemoveServerRequest,
   ): Promise<RemoveServerResponse> | Observable<RemoveServerResponse> | RemoveServerResponse;
+
+  /** Deployment CRUD operations */
+
+  getDeployment(
+    request: GetDeploymentRequest,
+  ): Promise<GetDeploymentResponse> | Observable<GetDeploymentResponse> | GetDeploymentResponse;
+
+  listDeployments(
+    request: ListDeploymentsRequest,
+  ): Promise<ListDeploymentsResponse> | Observable<ListDeploymentsResponse> | ListDeploymentsResponse;
+
+  deleteDeployment(
+    request: DeleteDeploymentRequest,
+  ): Promise<DeleteDeploymentResponse> | Observable<DeleteDeploymentResponse> | DeleteDeploymentResponse;
+
+  /** Deployment control operations */
+
+  startDeployment(
+    request: StartDeploymentRequest,
+  ): Promise<StartDeploymentResponse> | Observable<StartDeploymentResponse> | StartDeploymentResponse;
+
+  stopDeployment(
+    request: StopDeploymentRequest,
+  ): Promise<StopDeploymentResponse> | Observable<StopDeploymentResponse> | StopDeploymentResponse;
 }
 
 export function DeploymentServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["listServers", "addServer", "removeServer"];
+    const grpcMethods: string[] = [
+      "listServers",
+      "addServer",
+      "removeServer",
+      "getDeployment",
+      "listDeployments",
+      "deleteDeployment",
+      "startDeployment",
+      "stopDeployment",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("DeploymentService", method)(constructor.prototype[method], method, descriptor);

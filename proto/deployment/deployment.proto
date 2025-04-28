@@ -5,8 +5,10 @@ package deployment;
 option go_package = "gen/go/deployment";
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 service DeploymentService {
+    // Server management
     rpc ListServers (ListServersRequest) returns (ListServersResponse) {
         option (google.api.http) = {
             get: "/servers"
@@ -21,6 +23,35 @@ service DeploymentService {
     rpc RemoveServer (RemoveServerRequest) returns (RemoveServerResponse) {
         option (google.api.http) = {
             delete: "/servers/{id}"
+        };
+    };
+
+    // Deployment CRUD operations
+    rpc GetDeployment (GetDeploymentRequest) returns (GetDeploymentResponse) {
+        option (google.api.http) = {
+            get: "/deployments/{id}"
+        };
+    };
+    rpc ListDeployments (ListDeploymentsRequest) returns (ListDeploymentsResponse) {
+        option (google.api.http) = {
+            get: "/deployments"
+        };
+    };
+    rpc DeleteDeployment (DeleteDeploymentRequest) returns (DeleteDeploymentResponse) {
+        option (google.api.http) = {
+            delete: "/deployments/{id}"
+        };
+    };
+
+    // Deployment control operations
+    rpc StartDeployment (StartDeploymentRequest) returns (StartDeploymentResponse) {
+        option (google.api.http) = {
+            post: "/deployments/{id}/start"
+        };
+    };
+    rpc StopDeployment (StopDeploymentRequest) returns (StopDeploymentResponse) {
+        option (google.api.http) = {
+            post: "/deployments/{id}/stop"
         };
     };
 }
@@ -72,4 +103,68 @@ message DeployContainerRequest {
 
 message DeployContainerResponse {
     string status = 1;
+}
+
+// Deployment messages
+message Deployment {
+    string id = 1;
+    string owner = 2;
+    string name = 3;
+    string url = 4;
+    string status = 5;
+    google.protobuf.Timestamp start_time = 6;
+    google.protobuf.Timestamp end_time = 7;
+    int64 duration_seconds = 8;
+    uint32 server_id = 9;
+    string container_id = 10;
+}
+
+// CRUD requests and responses
+message CreateDeploymentResponse {
+    Deployment deployment = 1;
+}
+
+message GetDeploymentRequest {
+    string id = 1;
+}
+
+message GetDeploymentResponse {
+    Deployment deployment = 1;
+}
+
+message ListDeploymentsRequest {
+    string owner = 1; // Optional filter by owner
+}
+
+message ListDeploymentsResponse {
+    repeated Deployment deployments = 1;
+}
+
+message UpdateDeploymentResponse {
+    Deployment deployment = 1;
+}
+
+message DeleteDeploymentRequest {
+    string id = 1;
+}
+
+message DeleteDeploymentResponse {
+    bool success = 1;
+}
+
+// Control operation requests and responses
+message StartDeploymentRequest {
+    string id = 1;
+}
+
+message StartDeploymentResponse {
+    Deployment deployment = 1;
+}
+
+message StopDeploymentRequest {
+    string id = 1;
+}
+
+message StopDeploymentResponse {
+    Deployment deployment = 1;
 }
